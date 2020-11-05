@@ -1,0 +1,52 @@
+CREATE OR REPLACE PACKAGE pkg_student IS
+	PROCEDURE  updateRecord(sno student.rollno%type);
+	FUNCTION deleteRecord(snm student.sname%type)
+		RETURN boolean;
+END pkg_student;
+
+Package Created
+
+
+set serveroutput on;
+CREATE OR REPLACE PACKAGE BODY pkg_student IS
+	PROCEDURE updateRecord(sno student.rollno%type) IS
+		BEGIN
+			Update student set age=23 where rollno=sno;
+			IF  SQL%FOUND THEN
+				dbms_output.put_line('RECORD UPDATED');
+			ELSE
+				dbms_output.put_line('RECORD NOT FOUND');
+			END IF;
+		END updateRecord;
+
+	FUNCTION deleteRecord(snm student.sname%type) RETURN boolean IS
+		BEGIN
+			Delete from student where sname=snm;
+			RETURN SQL%FOUND;
+		END deleteRecord;
+END pkg_student;
+
+Package Body Created
+
+
+set serveroutput on;
+DECLARE
+	sno student.rollno%type;
+	s_age student.age%type;
+	snm student.sname%type;
+BEGIN
+	sno := &sno;
+	snm := &snm
+	pkg_student.updateRecord(sno);
+	IF pkg_student.deleteRecord(snm) THEN
+		dbms_output.put_line('RECORD DELETED');
+	ELSE
+		dbms_output.put_line('RECORD NOT FOUND');
+	END IF;
+END;
+
+Enter value for sno: 12
+Enter value for snm: Neha
+RECORD UPDATED
+RECORD NOT FOUND
+PL/SQL procedure successfully completed.
